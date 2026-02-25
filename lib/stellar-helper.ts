@@ -221,3 +221,92 @@ export async function getTransactionHistory(
 export function shortenAddress(address: string, chars = 6): string {
   return `${address.slice(0, chars)}...${address.slice(-chars)}`;
 }
+
+// ─── Wallet Connection Helpers ──────────────────────────────────────────────────
+
+/**
+ * Connect to Freighter wallet and return public key
+ */
+export async function connectWallet(): Promise<string> {
+  if (typeof window === 'undefined') {
+    throw new Error("Wallet connection is only available in the browser.");
+  }
+
+  // Check for Freighter multiple times with delays
+  let freighter = null;
+  let attempts = 0;
+  const maxAttempts = 3;
+  
+  while (attempts < maxAttempts && !freighter) {
+    freighter = (window as unknown as { freighter?: {
+      isConnected: () => Promise<boolean>;
+      requestAccess: () => Promise<string>;
+      getPublicKey: () => Promise<string>;
+      getNetwork: () => Promise<string>;
+    } }).freighter;
+    
+    if (!freighter && attempts < maxAttempts - 1) {
+      // Wait longer between attempts
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+    attempts++;
+  }
+
+  if (!freighter) {
+    throw new Error(
+      "Freighter wallet not found. Please:\n" +
+      "1. Install Freighter from https://freighter.app\n" +
+      "2. Enable the extension in your browser\n" +
+      "3. Refresh this page\n" +
+      "4. Try in a new tab if issues persist"
+    );
+  }
+
+  try {
+    const connected = await freighter.isConnected();
+    if (!connected) {
+      await freighter.requestAccess();
+    }
+
+    const publicKey = await freighter.getPublicKey();
+    const network = await freighter.getNetwork();
+
+    if (network !== "TESTNET") {
+      throw new Error(
+        "Please switch Freighter to Testnet network. Click the Freighter icon and select Testnet."
+      );
+    }
+
+    if (!publicKey || !publicKey.startsWith('G')) {
+      throw new Error("Invalid public key received from Freighter.");
+    }
+
+    return publicKey;
+  } catch (error: unknown) {
+    const err = error as Error;
+    if (err.message.includes("User rejected")) {
+      throw new Error("Connection request was rejected. Please try again and approve the connection.");
+    }
+    if (err.message.includes("not unlocked")) {
+      throw new Error("Please unlock Freighter with your password and try again.");
+    }
+    throw error;
+  }
+}
+
+/**
+ * Disconnect wallet (clear session)
+ */
+export function disconnect(): void {
+  // Freighter doesn't have a formal disconnect method
+  // This is mainly for UI state management
+  console.log("Wallet disconnected");
+}
+
+/**
+ * Export stellar object for backward compatibility
+ */
+export const stellar = {
+  connectWallet,
+  disconnect,
+};

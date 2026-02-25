@@ -8,6 +8,8 @@ import BalanceDisplay from "@/components/BalanceDisplay";
 import PaymentForm from "@/components/PaymentForm";
 import TransactionHistory from "@/components/TransactionHistory";
 import BuyCoffeeContract from "@/components/BuyCoffeeContract";
+import WalletGuide from "@/components/WalletGuide";
+import FreighterTroubleshoot from "@/components/FreighterTroubleshoot";
 
 export default function Home() {
   const [address, setAddress] = useState<string | null>(null);
@@ -20,27 +22,34 @@ export default function Home() {
     setRefreshCount((c) => c + 1);
   }
 
+  const handleWalletConnect = (publicKey: string) => {
+    setAddress(publicKey);
+  };
+
+  const handleWalletDisconnect = () => {
+    setAddress(null);
+  };
+
   return (
-    <main className="min-h-screen bg-linear-to-br from-amber-50 via-orange-50 to-yellow-50">
+    <main className="min-h-screen bg-linear-to-br from-gray-900 via-blue-900 to-purple-900">
       <div className="max-w-2xl mx-auto px-4 py-10 space-y-6">
         {/* Header */}
         <div className="text-center space-y-1.5">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-white">
             Stellar Testnet dApp
           </h1>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-300 text-sm">
             Freighter Wallet · Stellar Testnet · Soroban Contracts
           </p>
-          <span className="inline-block text-xs bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full font-medium">
+          <span className="inline-block text-xs bg-blue-600/20 text-blue-300 px-3 py-1 rounded-full font-medium border border-blue-500/30">
             🧪 Testnet Only
           </span>
         </div>
 
         {/* Wallet */}
         <WalletConnection
-          address={address}
-          onConnect={setAddress}
-          onDisconnect={() => setAddress(null)}
+          onConnect={handleWalletConnect}
+          onDisconnect={handleWalletDisconnect}
         />
 
         {address && (
@@ -93,12 +102,16 @@ export default function Home() {
         )}
 
         {!address && (
-          <div className="text-center text-gray-400 py-16 space-y-3">
-            <p className="text-5xl">☕</p>
-            <p className="text-sm">
-              Connect your Freighter wallet to get started
-            </p>
-          </div>
+          <>
+            <WalletGuide />
+            <FreighterTroubleshoot />
+            <div className="text-center text-gray-400 py-16 space-y-3">
+              <p className="text-5xl">☕</p>
+              <p className="text-sm">
+                Connect your Freighter wallet to get started
+              </p>
+            </div>
+          </>
         )}
       </div>
     </main>
