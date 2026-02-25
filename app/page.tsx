@@ -1,112 +1,103 @@
-import { Navbar } from "@/components/navbar";
-import { CoffeeBuyer } from "@/components/coffee-buyer";
-import { Leaderboard } from "@/components/leaderboard";
-import { TipHistory } from "@/components/tip-history";
+"use client";
+
+// app/page.tsx — Updated to include BuyCoffeeContract integration
+
+import { useState } from "react";
+import WalletConnection from "@/components/WalletConnection";
+import BalanceDisplay from "@/components/BalanceDisplay";
+import PaymentForm from "@/components/PaymentForm";
+import TransactionHistory from "@/components/TransactionHistory";
+import BuyCoffeeContract from "@/components/BuyCoffeeContract";
 
 export default function Home() {
+  const [address, setAddress] = useState<string | null>(null);
+  const [refreshCount, setRefreshCount] = useState(0);
+  const [activeSection, setActiveSection] = useState<"payments" | "coffee">("coffee");
+
+  function handlePaymentSuccess() {
+    setRefreshCount((c) => c + 1);
+  }
+
   return (
-    <div className="min-h-screen bg-linear-to-br from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800">
-      <Navbar />
+    <main className="min-h-screen bg-linear-to-br from-amber-50 via-orange-50 to-yellow-50">
+      <div className="max-w-2xl mx-auto px-4 py-10 space-y-6">
 
-      <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            ☕ Buy Me a Coffee
+        <div className="text-center space-y-1.5">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Stellar Testnet dApp
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Support your favorite creators with coffee donations on the Stellar
-            blockchain. Every coffee helps keep the creativity flowing!
+          <p className="text-gray-500 text-sm">
+            Freighter Wallet · Stellar Testnet · Soroban Contracts
           </p>
+          <span className="inline-block text-xs bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full font-medium">
+            🧪 Testnet Only
+          </span>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {/* Coffee Purchase Form - Takes up 2 columns on large screens */}
-          <div className="lg:col-span-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="md:col-span-2">
-                <CoffeeBuyer />
-              </div>
-              <div className="md:col-span-2">
-                <TipHistory />
-              </div>
+        {/* Wallet */}
+        <WalletConnection
+          address={address}
+          onConnect={setAddress}
+          onDisconnect={() => setAddress(null)}
+        />
+
+        {address && (
+          <>
+            <BalanceDisplay address={address} refreshTrigger={refreshCount} />
+
+            {/* Section Switcher */}
+            <div className="flex rounded-xl overflow-hidden border border-amber-200 bg-amber-50">
+              <button
+                onClick={() => setActiveSection("coffee")}
+                className={`flex-1 py-2.5 text-sm font-semibold transition-all ${
+                  activeSection === "coffee"
+                    ? "bg-amber-500 text-white"
+                    : "text-amber-600 hover:bg-amber-100"
+                }`}
+              >
+                ☕ By Me a Coffee Contract
+              </button>
+              <button
+                onClick={() => setActiveSection("payments")}
+                className={`flex-1 py-2.5 text-sm font-semibold transition-all ${
+                  activeSection === "payments"
+                    ? "bg-indigo-500 text-white"
+                    : "text-indigo-600 hover:bg-indigo-50"
+                }`}
+              >
+                💸 XLM Payments
+              </button>
             </div>
+
+            {/* Coffee Contract Section */}
+            {activeSection === "coffee" && (
+              <BuyCoffeeContract address={address} />
+            )}
+
+            {/* Classic Payment Section */}
+            {activeSection === "payments" && (
+              <>
+                <PaymentForm
+                  sourceAddress={address}
+                  onSuccess={handlePaymentSuccess}
+                />
+                <TransactionHistory
+                  address={address}
+                  refreshTrigger={refreshCount}
+                />
+              </>
+            )}
+          </>
+        )}
+
+        {!address && (
+          <div className="text-center text-gray-400 py-16 space-y-3">
+            <p className="text-5xl">☕</p>
+            <p className="text-sm">Connect your Freighter wallet to get started</p>
           </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            <Leaderboard />
-
-            {/* Contract Info Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold mb-4">Contract Info</h3>
-              <div className="space-y-3 text-sm">
-                <div>
-                  <span className="font-medium">Contract ID:</span>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 break-all mt-1">
-                    CAYRJABAYNE4Q5PYYILXIUZOWKCHJGMURXXWAD7MXGFHGRRSUG5CCIKF
-                  </p>
-                </div>
-                <div>
-                  <span className="font-medium">Network:</span>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    Stellar Testnet
-                  </p>
-                </div>
-                <div>
-                  <span className="font-medium">Token:</span>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    XLM (Native)
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* How it Works */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold mb-4">How it Works</h3>
-              <ol className="space-y-3 text-sm">
-                <li className="flex gap-3">
-                  <span className="shrink-0 w-6 h-6 bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 rounded-full flex items-center justify-center text-xs font-medium">
-                    1
-                  </span>
-                  <span>Connect your Stellar wallet</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="shrink-0 w-6 h-6 bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 rounded-full flex items-center justify-center text-xs font-medium">
-                    2
-                  </span>
-                  <span>Choose amount and leave a message</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="shrink-0 w-6 h-6 bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 rounded-full flex items-center justify-center text-xs font-medium">
-                    3
-                  </span>
-                  <span>Confirm transaction on Stellar</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="shrink-0 w-6 h-6 bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 rounded-full flex items-center justify-center text-xs font-medium">
-                    4
-                  </span>
-                  <span>See your name on the leaderboard!</span>
-                </li>
-              </ol>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center mt-16 text-sm text-gray-500 dark:text-gray-400">
-          <p>
-            Built with ❤️ using Next.js, Tailwind CSS, and Stellar Blockchain
-          </p>
-          <p className="mt-2">
-            Testnet Network • Contract ID:
-            CAYRJABAYNE4Q5PYYILXIUZOWKCHJGMURXXWAD7MXGFHGRRSUG5CCIKF
-          </p>
-        </div>
+        )}
       </div>
-    </div>
+    </main>
   );
 }
