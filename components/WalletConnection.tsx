@@ -2,8 +2,11 @@
 "use client";
 
 import { useState } from "react";
-import { shortenAddress, fundTestnetAccount, accountExists } from "@/lib/stellar-helper";
-import { div } from "motion/react-client";
+import {
+  shortenAddress,
+  fundTestnetAccount,
+  accountExists,
+} from "@/lib/stellar-helper";
 
 interface Props {
   onConnect: (address: string) => void;
@@ -11,7 +14,11 @@ interface Props {
   address: string | null;
 }
 
-export default function WalletConnection({ onConnect, onDisconnect, address }: Props) {
+export default function WalletConnection({
+  onConnect,
+  onDisconnect,
+  address,
+}: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [funding, setFunding] = useState(false);
@@ -21,15 +28,21 @@ export default function WalletConnection({ onConnect, onDisconnect, address }: P
     setError(null);
     try {
       // Freighter injects window.freighter
-      const freighter = (window as unknown as { freighter?: {
-        isConnected: () => Promise<boolean>;
-        requestAccess: () => Promise<string>;
-        getPublicKey: () => Promise<string>;
-        getNetwork: () => Promise<string>;
-      } }).freighter;
+      const freighter = (
+        window as unknown as {
+          freighter?: {
+            isConnected: () => Promise<boolean>;
+            requestAccess: () => Promise<string>;
+            getPublicKey: () => Promise<string>;
+            getNetwork: () => Promise<string>;
+          };
+        }
+      ).freighter;
 
       if (!freighter) {
-        throw new Error("Freighter wallet not found. Please install the Freighter extension.");
+        throw new Error(
+          "Freighter wallet not found. Please install the Freighter extension.",
+        );
       }
 
       const connected = await freighter.isConnected();
@@ -87,7 +100,7 @@ export default function WalletConnection({ onConnect, onDisconnect, address }: P
           </button>
           <p className="text-sm text-gray-500 text-center">
             Don&apos;t have Freighter?{" "}
-            
+            <a
               href="https://freighter.app"
               target="_blank"
               rel="noopener noreferrer"

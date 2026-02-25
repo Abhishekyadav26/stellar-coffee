@@ -11,7 +11,7 @@ export const SOROBAN_RPC_URL = "https://soroban-testnet.stellar.org";
 export const NETWORK_PASSPHRASE = StellarSdk.Networks.TESTNET;
 
 // 1 XLM = 10_000_000 stroops
-export const STROOPS_PER_XLM = 10_000_000n;
+export const STROOPS_PER_XLM = BigInt(10000000);
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -30,7 +30,7 @@ export interface LeaderboardEntry {
 // ─── Soroban RPC Client ───────────────────────────────────────────────────────
 
 function getRpcServer() {
-  return new StellarSdk.SorobanRpc.Server(SOROBAN_RPC_URL, {
+  return new StellarSdk.rpc.Server(SOROBAN_RPC_URL, {
     allowHttp: false,
   });
 }
@@ -85,11 +85,11 @@ export async function getTotalDonated(userAddress: string): Promise<string> {
 
     const simResult = await server.simulateTransaction(tx);
 
-    if (StellarSdk.SorobanRpc.Api.isSimulationError(simResult)) {
+    if (StellarSdk.rpc.Api.isSimulationError(simResult)) {
       return "0";
     }
 
-    const resultVal = (simResult as StellarSdk.SorobanRpc.Api.SimulateTransactionSuccessResponse)
+    const resultVal = (simResult as StellarSdk.rpc.Api.SimulateTransactionSuccessResponse)
       .result?.retval;
     if (!resultVal) return "0";
 
@@ -121,12 +121,13 @@ export async function getTipHistory(callerAddress: string): Promise<TipRecord[]>
 
     const simResult = await server.simulateTransaction(tx);
 
-    if (StellarSdk.SorobanRpc.Api.isSimulationError(simResult)) {
-      console.error("tip_history simulation error:", simResult.error);
+    if (StellarSdk.rpc.Api.isSimulationError(simResult)) {
+      const errorResult = simResult as StellarSdk.rpc.Api.SimulateTransactionErrorResponse;
+      console.error("tip_history simulation error:", errorResult.error || 'Unknown error');
       return [];
     }
 
-    const resultVal = (simResult as StellarSdk.SorobanRpc.Api.SimulateTransactionSuccessResponse)
+    const resultVal = (simResult as StellarSdk.rpc.Api.SimulateTransactionSuccessResponse)
       .result?.retval;
     if (!resultVal) return [];
 
@@ -169,12 +170,13 @@ export async function getLeaderboard(callerAddress: string): Promise<Leaderboard
 
     const simResult = await server.simulateTransaction(tx);
 
-    if (StellarSdk.SorobanRpc.Api.isSimulationError(simResult)) {
-      console.error("leaderboard simulation error:", simResult.error);
+    if (StellarSdk.rpc.Api.isSimulationError(simResult)) {
+      const errorResult = simResult as StellarSdk.rpc.Api.SimulateTransactionErrorResponse;
+      console.error("leaderboard simulation error:", errorResult.error || 'Unknown error');
       return [];
     }
 
-    const resultVal = (simResult as StellarSdk.SorobanRpc.Api.SimulateTransactionSuccessResponse)
+    const resultVal = (simResult as StellarSdk.rpc.Api.SimulateTransactionSuccessResponse)
       .result?.retval;
     if (!resultVal) return [];
 
@@ -224,14 +226,15 @@ export async function buildBuyCoffeeTransaction(
   // Simulate to get footprint / auth entries
   const simResult = await server.simulateTransaction(tx);
 
-  if (StellarSdk.SorobanRpc.Api.isSimulationError(simResult)) {
-    throw new Error(`Simulation failed: ${simResult.error}`);
+  if (StellarSdk.rpc.Api.isSimulationError(simResult)) {
+    const errorResult = simResult as StellarSdk.rpc.Api.SimulateTransactionErrorResponse;
+    throw new Error(`Simulation failed: ${errorResult.error || 'Unknown error'}`);
   }
 
   // Assemble the transaction with simulation results (adds soroban data, fees)
-  const assembledTx = StellarSdk.SorobanRpc.assembleTransaction(
+  const assembledTx = StellarSdk.rpc.assembleTransaction(
     tx,
-    simResult as StellarSdk.SorobanRpc.Api.SimulateTransactionSuccessResponse
+    simResult as StellarSdk.rpc.Api.SimulateTransactionSuccessResponse
   ).build();
 
   return assembledTx.toXDR();
@@ -261,10 +264,10 @@ export async function submitCoffeeTransaction(
       await new Promise((r) => setTimeout(r, 2000));
       const getResult = await server.getTransaction(hash);
 
-      if (getResult.status === StellarSdk.SorobanRpc.Api.GetTransactionStatus.SUCCESS) {
+      if (getResult.status === StellarSdk.rpc.Api.GetTransactionStatus.SUCCESS) {
         return { success: true, hash };
       }
-      if (getResult.status === StellarSdk.SorobanRpc.Api.GetTransactionStatus.FAILED) {
+      if (getResult.status === StellarSdk.rpc.Api.GetTransactionStatus.FAILED) {
         return { success: false, error: "Transaction failed on-chain", hash };
       }
       attempts++;

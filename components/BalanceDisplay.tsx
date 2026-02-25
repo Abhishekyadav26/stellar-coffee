@@ -1,7 +1,7 @@
 // components/BalanceDisplay.tsx
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { getAccountBalances, BalanceInfo } from "@/lib/stellar-helper";
 
 interface Props {
@@ -13,23 +13,31 @@ export default function BalanceDisplay({ address, refreshTrigger }: Props) {
   const [balances, setBalances] = useState<BalanceInfo[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchBalances = useCallback(async () => {
-    setLoading(true);
-    const data = await getAccountBalances(address);
-    setBalances(data);
-    setLoading(false);
-  }, [address]);
-
   useEffect(() => {
-    fetchBalances();
-  }, [fetchBalances, refreshTrigger]);
+    const controller = new AbortController();
+
+    const fetchData = async () => {
+      if (!controller.signal.aborted) {
+        setLoading(true);
+        const data = await getAccountBalances(address);
+        if (!controller.signal.aborted) {
+          setBalances(data);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => controller.abort();
+  }, [address, refreshTrigger]);
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-gray-800">Balances</h2>
         <button
-          onClick={fetchBalances}
+          onClick={() => window.location.reload()}
           className="text-sm text-indigo-500 hover:underline"
         >
           Refresh
@@ -39,7 +47,10 @@ export default function BalanceDisplay({ address, refreshTrigger }: Props) {
       {loading ? (
         <div className="space-y-2">
           {[1, 2].map((i) => (
-            <div key={i} className="h-12 bg-gray-100 rounded-xl animate-pulse" />
+            <div
+              key={i}
+              className="h-12 bg-gray-100 rounded-xl animate-pulse"
+            />
           ))}
         </div>
       ) : balances.length === 0 ? (

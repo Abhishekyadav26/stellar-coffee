@@ -16,7 +16,9 @@ export default function PaymentForm({ sourceAddress, onSuccess }: Props) {
   const [destination, setDestination] = useState("");
   const [amount, setAmount] = useState("");
   const [memo, setMemo] = useState("");
-  const [status, setStatus] = useState<"idle" | "building" | "signing" | "submitting">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "building" | "signing" | "submitting"
+  >("idle");
   const [error, setError] = useState<string | null>(null);
   const [txHash, setTxHash] = useState<string | null>(null);
 
@@ -40,9 +42,16 @@ export default function PaymentForm({ sourceAddress, onSuccess }: Props) {
 
       // Step 2: Ask Freighter to sign
       setStatus("signing");
-      const freighter = (window as unknown as { freighter?: {
-        signTransaction: (xdr: string, opts: { network: string }) => Promise<string>;
-      } }).freighter;
+      const freighter = (
+        window as unknown as {
+          freighter?: {
+            signTransaction: (
+              xdr: string,
+              opts: { network: string },
+            ) => Promise<string>;
+          };
+        }
+      ).freighter;
 
       if (!freighter) throw new Error("Freighter not found");
 
@@ -136,7 +145,7 @@ export default function PaymentForm({ sourceAddress, onSuccess }: Props) {
       {txHash && (
         <div className="text-sm bg-green-50 text-green-700 rounded-lg p-3 space-y-1">
           <p className="font-semibold">Transaction successful!</p>
-          
+          <a
             href={`https://stellar.expert/explorer/testnet/tx/${txHash}`}
             target="_blank"
             rel="noopener noreferrer"

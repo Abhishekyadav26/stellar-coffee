@@ -12,7 +12,9 @@ import BuyCoffeeContract from "@/components/BuyCoffeeContract";
 export default function Home() {
   const [address, setAddress] = useState<string | null>(null);
   const [refreshCount, setRefreshCount] = useState(0);
-  const [activeSection, setActiveSection] = useState<"payments" | "coffee">("coffee");
+  const [activeSection, setActiveSection] = useState<"payments" | "coffee">(
+    "coffee",
+  );
 
   function handlePaymentSuccess() {
     setRefreshCount((c) => c + 1);
@@ -21,7 +23,6 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-linear-to-br from-amber-50 via-orange-50 to-yellow-50">
       <div className="max-w-2xl mx-auto px-4 py-10 space-y-6">
-
         {/* Header */}
         <div className="text-center space-y-1.5">
           <h1 className="text-3xl font-bold text-gray-900">
@@ -94,7 +95,9 @@ export default function Home() {
         {!address && (
           <div className="text-center text-gray-400 py-16 space-y-3">
             <p className="text-5xl">☕</p>
-            <p className="text-sm">Connect your Freighter wallet to get started</p>
+            <p className="text-sm">
+              Connect your Freighter wallet to get started
+            </p>
           </div>
         )}
       </div>

@@ -1,8 +1,12 @@
 // components/TransactionHistory.tsx
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { getTransactionHistory, shortenAddress, TransactionRecord } from "@/lib/stellar-helper";
+import { useEffect, useState } from "react";
+import {
+  getTransactionHistory,
+  shortenAddress,
+  TransactionRecord,
+} from "@/lib/stellar-helper";
 
 interface Props {
   address: string;
@@ -13,22 +17,33 @@ export default function TransactionHistory({ address, refreshTrigger }: Props) {
   const [txs, setTxs] = useState<TransactionRecord[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchTxs = useCallback(async () => {
-    setLoading(true);
-    const data = await getTransactionHistory(address);
-    setTxs(data);
-    setLoading(false);
-  }, [address]);
-
   useEffect(() => {
-    fetchTxs();
-  }, [fetchTxs, refreshTrigger]);
+    const controller = new AbortController();
+
+    const fetchData = async () => {
+      if (!controller.signal.aborted) {
+        setLoading(true);
+        const data = await getTransactionHistory(address);
+        if (!controller.signal.aborted) {
+          setTxs(data);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => controller.abort();
+  }, [address, refreshTrigger]);
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-gray-800">Transaction History</h2>
-        <button onClick={fetchTxs} className="text-sm text-indigo-500 hover:underline">
+        <button
+          onClick={() => window.location.reload()}
+          className="text-sm text-indigo-500 hover:underline"
+        >
           Refresh
         </button>
       </div>
@@ -36,11 +51,16 @@ export default function TransactionHistory({ address, refreshTrigger }: Props) {
       {loading ? (
         <div className="space-y-2">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-16 bg-gray-100 rounded-xl animate-pulse" />
+            <div
+              key={i}
+              className="h-16 bg-gray-100 rounded-xl animate-pulse"
+            />
           ))}
         </div>
       ) : txs.length === 0 ? (
-        <p className="text-gray-400 text-sm text-center py-6">No transactions yet.</p>
+        <p className="text-gray-400 text-sm text-center py-6">
+          No transactions yet.
+        </p>
       ) : (
         <div className="space-y-3">
           {txs.map((tx) => (
@@ -69,10 +89,13 @@ export default function TransactionHistory({ address, refreshTrigger }: Props) {
                   </p>
                 </div>
               </div>
-              <span className={`font-mono font-semibold text-sm ${
-                tx.type === "sent" ? "text-red-500" : "text-green-500"
-              }`}>
-                {tx.type === "sent" ? "-" : "+"}{tx.amount} {tx.asset}
+              <span
+                className={`font-mono font-semibold text-sm ${
+                  tx.type === "sent" ? "text-red-500" : "text-green-500"
+                }`}
+              >
+                {tx.type === "sent" ? "-" : "+"}
+                {tx.amount} {tx.asset}
               </span>
             </div>
           ))}

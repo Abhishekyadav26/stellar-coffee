@@ -21,14 +21,12 @@ type FreighterAPI = {
   getPublicKey: () => Promise<string>;
   signTransaction: (
     xdr: string,
-    opts: { network: string; networkPassphrase: string }
+    opts: { network: string; networkPassphrase: string },
   ) => Promise<string>;
 };
 
 function getFreighter(): FreighterAPI | null {
-  return (
-    (window as unknown as { freighter?: FreighterAPI }).freighter ?? null
-  );
+  return (window as unknown as { freighter?: FreighterAPI }).freighter ?? null;
 }
 
 // ─── Preset coffee amounts ────────────────────────────────────────────────────
@@ -49,23 +47,33 @@ function ShortenAddr({ addr }: { addr: string }) {
   );
 }
 
-function CoffeeRing({ size = 48, animated = false }: { size?: number; animated?: boolean }) {
+function CoffeeRing({
+  size = 48,
+  animated = false,
+}: {
+  size?: number;
+  animated?: boolean;
+}) {
   return (
     <svg
       width={size}
       height={size}
       viewBox="0 0 48 48"
-      className={animated ? "animate-spin-slow" : ""}
+      className={animated ? "animate-spin" : ""}
     >
       <circle
-        cx="24" cy="24" r="20"
+        cx="24"
+        cy="24"
+        r="20"
         fill="none"
         stroke="#c8956c"
         strokeWidth="2.5"
         strokeDasharray="6 4"
         opacity="0.4"
       />
-      <text x="24" y="30" textAnchor="middle" fontSize="22">☕</text>
+      <text x="24" y="30" textAnchor="middle" fontSize="22">
+        ☕
+      </text>
     </svg>
   );
 }
@@ -81,7 +89,9 @@ function BuyCoffeeForm({
 }) {
   const [amount, setAmount] = useState("3");
   const [message, setMessage] = useState("");
-  const [step, setStep] = useState<"idle" | "building" | "signing" | "submitting" | "polling">("idle");
+  const [step, setStep] = useState<
+    "idle" | "building" | "signing" | "submitting" | "polling"
+  >("idle");
   const [error, setError] = useState<string | null>(null);
   const [txHash, setTxHash] = useState<string | null>(null);
 
@@ -100,7 +110,11 @@ function BuyCoffeeForm({
 
     try {
       setStep("building");
-      const xdr = await buildBuyCoffeeTransaction(address, amount, message || "☕");
+      const xdr = await buildBuyCoffeeTransaction(
+        address,
+        amount,
+        message || "☕",
+      );
 
       setStep("signing");
       const signedXDR = await freighter.signTransaction(xdr, {
@@ -111,7 +125,8 @@ function BuyCoffeeForm({
       setStep("submitting");
       const result = await submitCoffeeTransaction(signedXDR);
 
-      if (!result.success) throw new Error(result.error ?? "Transaction failed");
+      if (!result.success)
+        throw new Error(result.error ?? "Transaction failed");
 
       setTxHash(result.hash ?? null);
       setMessage("");
@@ -179,7 +194,9 @@ function BuyCoffeeForm({
           className="w-full rounded-xl border-2 border-amber-100 bg-amber-50/50 px-4 py-2.5 text-amber-900 text-sm focus:outline-none focus:border-amber-400 transition resize-none"
           placeholder="Thanks for the great work! ☕"
         />
-        <p className="text-right text-xs text-amber-400 mt-0.5">{message.length}/100</p>
+        <p className="text-right text-xs text-amber-400 mt-0.5">
+          {message.length}/100
+        </p>
       </div>
 
       {/* Submit */}
@@ -203,7 +220,9 @@ function BuyCoffeeForm({
 
       {txHash && (
         <div className="rounded-xl bg-green-50 border border-green-200 p-3 space-y-1">
-          <p className="text-sm font-semibold text-green-700">☕ Coffee sent! Thank you!</p>
+          <p className="text-sm font-semibold text-green-700">
+            ☕ Coffee sent! Thank you!
+          </p>
           <a
             href={`https://stellar.expert/explorer/testnet/tx/${txHash}`}
             target="_blank"
@@ -310,7 +329,9 @@ function LeaderboardTab({ address }: { address: string }) {
     return (
       <div className="text-center py-10">
         <p className="text-4xl mb-2">🏆</p>
-        <p className="text-amber-500 text-sm">Leaderboard is empty. Claim #1!</p>
+        <p className="text-amber-500 text-sm">
+          Leaderboard is empty. Claim #1!
+        </p>
       </div>
     );
   }
@@ -369,7 +390,8 @@ function MyStatsTab({ address }: { address: string }) {
           <div className="h-10 w-32 mx-auto bg-amber-100 rounded-xl animate-pulse" />
         ) : (
           <p className="text-4xl font-bold text-amber-800 font-mono">
-            {total} <span className="text-2xl font-normal text-amber-500">XLM</span>
+            {total}{" "}
+            <span className="text-2xl font-normal text-amber-500">XLM</span>
           </p>
         )}
       </div>
@@ -463,9 +485,7 @@ export default function BuyCoffeeContract({ address }: Props) {
         {tab === "leaderboard" && (
           <LeaderboardTab key={refreshKey} address={address} />
         )}
-        {tab === "stats" && (
-          <MyStatsTab key={refreshKey} address={address} />
-        )}
+        {tab === "stats" && <MyStatsTab key={refreshKey} address={address} />}
       </div>
 
       {/* Footer */}
