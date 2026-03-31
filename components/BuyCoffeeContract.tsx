@@ -5,6 +5,7 @@
 // Contract: CAYRJABAYNE4Q5PYYILXIUZOWKCHJGMURXXWAD7MXGFHGRRSUG5CCIKF
 
 import { useState, useEffect, useCallback } from "react";
+import { stellar } from "@/lib/stellar-helper";
 import {
   buildBuyCoffeeTransaction,
   submitCoffeeTransaction,
@@ -14,20 +15,6 @@ import {
   TipRecord,
   LeaderboardEntry,
 } from "@/lib/coffee-contract";
-
-// ─── Freighter type shim ──────────────────────────────────────────────────────
-type FreighterAPI = {
-  isConnected: () => Promise<boolean>;
-  getPublicKey: () => Promise<string>;
-  signTransaction: (
-    xdr: string,
-    opts: { network: string; networkPassphrase: string },
-  ) => Promise<string>;
-};
-
-function getFreighter(): FreighterAPI | null {
-  return (window as unknown as { freighter?: FreighterAPI }).freighter ?? null;
-}
 
 // ─── Preset coffee amounts ────────────────────────────────────────────────────
 const COFFEE_PRESETS = [
@@ -98,11 +85,13 @@ function BuyCoffeeForm({
   async function handleBuy() {
     setError(null);
     setTxHash(null);
-    const freighter = getFreighter();
-    if (!freighter) {
-      setError("Freighter wallet not found.");
+
+    // Check if wallet is connected through stellar helper
+    if (!stellar.publicKey) {
+      setError("Wallet not connected. Please connect your wallet first.");
       return;
     }
+
     if (!amount || parseFloat(amount) <= 0) {
       setError("Enter a valid amount.");
       return;
@@ -117,13 +106,11 @@ function BuyCoffeeForm({
       );
 
       setStep("signing");
-      const signedXDR = await freighter.signTransaction(xdr, {
-        network: "TESTNET",
-        networkPassphrase: "Test SDF Network ; September 2015",
-      });
+      // Use stellar helper to sign the transaction
+      const { signedTxXdr } = await stellar.signTransaction(xdr);
 
       setStep("submitting");
-      const result = await submitCoffeeTransaction(signedXDR);
+      const result = await submitCoffeeTransaction(signedTxXdr);
 
       if (!result.success)
         throw new Error(result.error ?? "Transaction failed");

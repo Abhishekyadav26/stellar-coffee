@@ -5,6 +5,7 @@ import { useState } from "react";
 import {
   buildPaymentTransaction,
   submitSignedTransaction,
+  signTransaction,
 } from "@/lib/stellar-helper";
 
 interface Props {
@@ -40,28 +41,13 @@ export default function PaymentForm({ sourceAddress, onSuccess }: Props) {
         sourcePublicKey: sourceAddress,
       });
 
-      // Step 2: Ask Freighter to sign
+      // Step 2: Ask wallet to sign
       setStatus("signing");
-      const freighter = (
-        window as unknown as {
-          freighter?: {
-            signTransaction: (
-              xdr: string,
-              opts: { network: string },
-            ) => Promise<string>;
-          };
-        }
-      ).freighter;
-
-      if (!freighter) throw new Error("Freighter not found");
-
-      const signedXDR = await freighter.signTransaction(xdr, {
-        network: "TESTNET",
-      });
+      const { signedTxXdr } = await signTransaction(xdr);
 
       // Step 3: Submit to Stellar network
       setStatus("submitting");
-      const result = await submitSignedTransaction(signedXDR);
+      const result = await submitSignedTransaction(signedTxXdr);
 
       if (!result.success) throw new Error(result.error);
 
