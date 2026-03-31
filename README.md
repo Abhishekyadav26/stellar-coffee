@@ -1,6 +1,6 @@
 # ☕ Stellar Testnet dApp — By Me a Coffee
 
-> A full-stack Web3 dApp built on **Stellar Testnet** with **Freighter Wallet** integration and a deployed **Soroban smart contract** for on-chain coffee tipping.
+> A full-stack Web3 dApp built on **Stellar Testnet** with **multi-wallet support** and a deployed **Soroban smart contract** for on-chain coffee tipping.
 
 <div align="center">
 
@@ -18,11 +18,11 @@
 
 | Feature | Description |
 |---|---|
-| 🔐 **Freighter Wallet** | Connect/disconnect, sign transactions — private key never leaves your browser |
+| 🔐 **Multi-Wallet Support** | Connect/disconnect with Freighter and other compatible wallets via @creit.tech/stellar-wallets-kit |
 | 💸 **XLM Payments** | Send XLM to any Stellar address with optional memo |
 | ☕ **Buy Me a Coffee** | Tip creators on-chain via a deployed Soroban contract |
 | 🏆 **Leaderboard** | On-chain leaderboard of top supporters |
-| 📜 **Tip History** | Full history of coffee tips from the contract |
+| 📜 **Tip History** | Full history of coffee tips from contract |
 | 📊 **My Stats** | Your personal total donated, fetched live from contract state |
 | 💧 **Friendbot Funding** | Fund your testnet wallet instantly with 10,000 XLM |
 | 🔄 **Live Balances** | Auto-refreshing XLM + token balances via Horizon API |
@@ -32,20 +32,21 @@
 ## 🏗️ Project Structure
 
 ```
-stellar-frontend-challenge/
+stellar-coffee/
 ├── app/
 │   ├── globals.css              # Global styles and Tailwind CSS
 │   ├── layout.tsx               # Root layout with metadata
 │   └── page.tsx                 # Main app page with section switcher
 ├── components/
-│   ├── WalletConnection.tsx     # Freighter connect/disconnect + Friendbot
+│   ├── WalletConnection.tsx     # Multi-wallet connect/disconnect + Friendbot
 │   ├── BalanceDisplay.tsx       # Live XLM & token balance display
 │   ├── PaymentForm.tsx          # Classic XLM payment with memo
 │   ├── TransactionHistory.tsx   # Recent payments via Horizon API
 │   └── BuyCoffeeContract.tsx    # ☕ Full Soroban contract UI (4 tabs)
 ├── lib/
-│   ├── stellar-helper.ts        # Horizon API helpers (payments, balances, history)
+│   ├── stellar-helper.ts        # Unified wallet & Horizon API helpers
 │   └── coffee-contract.ts       # Soroban contract calls (buy_coffee, leaderboard, etc.)
+├── coffee-contact/             # Rust Soroban contract source code
 ├── package.json
 ├── tailwind.config.js
 └── tsconfig.json
@@ -80,7 +81,7 @@ fn total_donated(user: Address) -> i128
 
 ```
 1. buildBuyCoffeeTransaction()     → simulate tx to get Soroban footprint + fees
-2. freighter.signTransaction()     → user approves in Freighter popup
+2. stellar.signTransaction()       → user approves in wallet popup
 3. submitCoffeeTransaction()       → submit to Soroban RPC, poll until SUCCEEDED
 ```
 
@@ -93,20 +94,20 @@ fn total_donated(user: Address) -> i128
 ### Prerequisites
 
 - [Node.js 18+](https://nodejs.org/)
-- [Freighter Wallet](https://freighter.app/) browser extension
-- Freighter set to **Testnet** network
+- [Freighter Wallet](https://freighter.app/) browser extension (recommended)
+- Wallet set to **Testnet** network
 
 ### Installation
 
 ```bash
-# 1. Clone the repo
-git clone https://github.com/your-username/stellar-frontend-challenge.git
-cd stellar-frontend-challenge
+# 1. Clone repo
+git clone https://github.com/Abhishekyadav26/stellar-coffee.git
+cd stellar-coffee
 
 # 2. Install dependencies
 npm install
 
-# 3. Start the dev server
+# 3. Start dev server
 npm run dev
 ```
 
@@ -118,7 +119,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 1. Install Freighter → freighter.app
 2. Open Freighter → Settings → Network → Select "Testnet"
 3. Create or import a wallet in Freighter
-4. Open the app → Connect Freighter
+4. Open app → Connect Wallet
 5. Click "Fund via Friendbot" → receive 10,000 XLM instantly
 6. You're ready to send payments and buy coffees on-chain! ☕
 ```
@@ -130,6 +131,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ```json
 {
   "@stellar/stellar-sdk": "^13.x",   // Stellar & Soroban SDK
+  "@creit.tech/stellar-wallets-kit": "^1.x", // Multi-wallet support
   "next": "^15.x",                    // Next.js App Router
   "react": "^19.x",
   "typescript": "^5.x",
@@ -140,27 +142,23 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 Install them:
 
 ```bash
-npm install @stellar/stellar-sdk next react react-dom typescript tailwindcss
+npm install @stellar/stellar-sdk @creit.tech/stellar-wallets-kit next react react-dom typescript tailwindcss
 ```
 
 ---
 
-## 🔑 How Freighter Signing Works
-
+## 🔑 How Wallet Signing Works
 The app **never touches your private key**. Here's the pattern used throughout:
 
 ```typescript
 // 1. Build unsigned transaction → returns XDR string
 const xdr = await buildBuyCoffeeTransaction(address, amount, message);
 
-// 2. Freighter signs it (private key stays in extension)
-const signedXDR = await window.freighter.signTransaction(xdr, {
-  network: "TESTNET",
-  networkPassphrase: "Test SDF Network ; September 2015",
-});
+// 2. Wallet signs it (private key stays in wallet)
+const { signedTxXdr } = await stellar.signTransaction(xdr);
 
 // 3. Submit signed XDR to Soroban RPC
-const result = await submitCoffeeTransaction(signedXDR);
+const result = await submitCoffeeTransaction(signedTxXdr);
 ```
 
 ---
@@ -183,7 +181,7 @@ const result = await submitCoffeeTransaction(signedXDR);
 ┌─────────────────────────────────────────────────────┐
 │                   Next.js Frontend                  │
 │                                                     │
-│  page.tsx ──► WalletConnection  ◄── Freighter ext  │
+│  page.tsx ──► WalletConnection  ◄── Wallet Kit       │
 │            ├─► BalanceDisplay   ──► Horizon API     │
 │            ├─► PaymentForm      ──► Horizon API     │
 │            ├─► TransactionHistory ► Horizon API     │
@@ -211,7 +209,7 @@ const result = await submitCoffeeTransaction(signedXDR);
 
 ### `lib/coffee-contract.ts`
 All Soroban contract interaction logic lives here. Exports:
-- `buildBuyCoffeeTransaction()` — builds + simulates the tx, returns XDR
+- `buildBuyCoffeeTransaction()` — builds + simulates tx, returns XDR
 - `submitCoffeeTransaction()` — submits signed XDR, polls for confirmation
 - `getTipHistory()` — reads all tips via simulation (free, no signature)
 - `getLeaderboard()` — reads top donors
@@ -219,7 +217,9 @@ All Soroban contract interaction logic lives here. Exports:
 - `xlmToStroops()` / `stroopsToXlm()` — unit conversion helpers
 
 ### `lib/stellar-helper.ts`
-Classic Horizon API helpers:
+Unified wallet and Horizon API helpers:
+- `connectWallet()` / `disconnect()` — wallet connection management
+- `signTransaction()` — unified signing for any connected wallet
 - `getAccountBalances()` — fetch XLM + token balances
 - `buildPaymentTransaction()` — build a classic XLM payment
 - `submitSignedTransaction()` — submit to Horizon
@@ -234,7 +234,10 @@ The full coffee contract UI with 4 tabs: Buy, History, Leaderboard, My Stats.
 ## 🛠️ Deploying Your Own Contract
 
 ```bash
-# Build the Rust contract
+# Navigate to contract directory
+cd coffee-contact
+
+# Build Rust contract
 cargo build --target wasm32v1-none --release
 
 # Deploy to testnet
@@ -251,10 +254,10 @@ Then update `COFFEE_CONTRACT_ID` in `lib/coffee-contract.ts` with your new contr
 
 ## 🤝 Contributing
 
-1. Fork the repo
+1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/my-feature`
 3. Commit changes: `git commit -m 'Add my feature'`
-4. Push: `git push origin feature/my-feature`
+4. Push to your fork: `git push origin feature/my-feature`
 5. Open a Pull Request
 
 ---
@@ -265,9 +268,25 @@ MIT — feel free to fork and build your own Stellar dApps!
 
 ---
 
+## 🆕 Recent Updates
+
+### ✅ Multi-Wallet Support
+- **Upgraded** from direct Freighter integration to `@creit.tech/stellar-wallets-kit`
+- **Added** support for multiple compatible wallets
+- **Fixed** "wallet not found" issues in Buy Me Coffee transactions
+- **Streamlined** wallet connection across all components
+
+### ✅ Code Improvements
+- **Unified** wallet handling through `stellar-helper.ts`
+- **Removed** redundant troubleshooting components
+- **Enhanced** error handling and user experience
+- **Cleaned** up project structure and documentation
+
+---
+
 <div align="center">
 
-Built with ❤️ on **Stellar Testnet** · Powered by **Soroban** · Signed by **Freighter**
+Built with ❤️ on **Stellar Testnet** · Powered by **Soroban** · Multi-Wallet Support
 
 ⭐ Star this repo if you found it helpful!
 
