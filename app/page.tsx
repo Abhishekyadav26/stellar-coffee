@@ -8,8 +8,6 @@ import BalanceDisplay from "@/components/BalanceDisplay";
 import PaymentForm from "@/components/PaymentForm";
 import TransactionHistory from "@/components/TransactionHistory";
 import BuyCoffeeContract from "@/components/BuyCoffeeContract";
-import WalletGuide from "@/components/WalletGuide";
-import FreighterTroubleshoot from "@/components/FreighterTroubleshoot";
 
 export default function Home() {
   const [address, setAddress] = useState<string | null>(null);
@@ -102,16 +100,10 @@ export default function Home() {
         )}
 
         {!address && (
-          <>
-            <WalletGuide />
-            <FreighterTroubleshoot />
-            <div className="text-center text-gray-400 py-16 space-y-3">
-              <p className="text-5xl">☕</p>
-              <p className="text-sm">
-                Connect your Freighter wallet to get started
-              </p>
-            </div>
-          </>
+          <div className="text-center text-gray-400 py-16 space-y-3">
+            <p className="text-5xl">☕</p>
+            <p className="text-sm">Connect your wallet to get started</p>
+          </div>
         )}
       </div>
     </main>
