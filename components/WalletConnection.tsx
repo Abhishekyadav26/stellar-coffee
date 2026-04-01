@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { stellar } from "@/lib/stellar-helper";
 import { FaWallet, FaCopy, FaCheck } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
@@ -20,6 +20,33 @@ export default function WalletConnection({
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string>("");
 
+  // Check for existing wallet connection on component mount
+  useEffect(() => {
+    const checkExistingConnection = async () => {
+      try {
+        // Check if we have a stored public key
+        const storedKey = localStorage.getItem("stellar_public_key");
+        if (storedKey) {
+          // Validate the stored key is a valid Stellar address
+          if (storedKey.startsWith("G") && storedKey.length === 56) {
+            setPublicKey(storedKey);
+            setIsConnected(true);
+            stellar.restoreConnection(storedKey); // Restore internal state
+            onConnect(storedKey);
+          } else {
+            // Clear invalid stored key
+            localStorage.removeItem("stellar_public_key");
+          }
+        }
+      } catch (error) {
+        console.error("Error checking existing connection:", error);
+        localStorage.removeItem("stellar_public_key");
+      }
+    };
+
+    checkExistingConnection();
+  }, [onConnect]);
+
   const handleConnect = async () => {
     try {
       setLoading(true);
@@ -27,6 +54,8 @@ export default function WalletConnection({
       const key = await stellar.connectWallet();
       setPublicKey(key);
       setIsConnected(true);
+      // Save to localStorage for persistence
+      localStorage.setItem("stellar_public_key", key);
       onConnect(key);
     } catch (error: unknown) {
       const errorMessage =
@@ -42,6 +71,8 @@ export default function WalletConnection({
     stellar.disconnect();
     setPublicKey("");
     setIsConnected(false);
+    // Clear localStorage
+    localStorage.removeItem("stellar_public_key");
     onDisconnect();
   };
 
@@ -53,7 +84,7 @@ export default function WalletConnection({
 
   if (!isConnected) {
     return (
-      <div className="border border-white/10 rounded-xl p-6 bg-black/40 backdrop-blur-md space-y-4 shadow-2xl">
+      <div className="border border-white/10 rounded-xl p-8 bg-black/40 backdrop-blur-md space-y-6 shadow-2xl">
         <button
           onClick={handleConnect}
           disabled={loading}
@@ -91,7 +122,7 @@ export default function WalletConnection({
   }
 
   return (
-    <div className="border border-white/10 rounded-xl p-6 bg-black/40 backdrop-blur-md space-y-4 shadow-2xl">
+    <div className="border border-white/10 rounded-xl p-8 bg-black/40 backdrop-blur-md space-y-6 shadow-2xl">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>

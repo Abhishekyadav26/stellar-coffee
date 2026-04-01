@@ -33,8 +33,8 @@ export default function BalanceDisplay({ address, refreshTrigger }: Props) {
   }, [address, refreshTrigger]);
 
   return (
-    <div className="border border-white/10 rounded-xl p-6 bg-black/40 backdrop-blur-md shadow-2xl">
-      <div className="flex justify-between items-center mb-4">
+    <div className="border border-white/10 rounded-xl p-8 bg-black/40 backdrop-blur-md shadow-2xl">
+      <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-extrabold text-white">Balances</h2>
         <button
           onClick={() => window.location.reload()}
@@ -45,7 +45,7 @@ export default function BalanceDisplay({ address, refreshTrigger }: Props) {
       </div>
 
       {loading ? (
-        <div className="space-y-2">
+        <div className="space-y-4">
           {[1, 2].map((i) => (
             <div
               key={i}
@@ -54,15 +54,15 @@ export default function BalanceDisplay({ address, refreshTrigger }: Props) {
           ))}
         </div>
       ) : balances.length === 0 ? (
-        <p className="text-sm font-bold text-center py-4 text-white">
+        <p className="text-sm font-bold text-center py-6 text-white">
           No balances found. Fund your account first!
         </p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {balances.map((b, i) => (
             <div
               key={i}
-              className="flex justify-between items-center bg-black/30 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10"
+              className="flex justify-between items-center bg-black/30 backdrop-blur-sm rounded-xl px-4 py-4 border border-white/10"
             >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center border border-blue-500/30">

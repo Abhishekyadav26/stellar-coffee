@@ -152,6 +152,13 @@ export class StellarHelper {
     });
   }
 
+  /**
+   * Restore wallet connection state (for persistence)
+   */
+  restoreConnection(publicKey: string): void {
+    this._publicKey = publicKey;
+  }
+
   // ─── Account ───────────────────────────────────────────────────────────────
 
   /**
@@ -463,3 +470,4 @@ export const getTransactionHistory = (pk: string, limit?: number) =>
 export const shortenAddress = (address: string, chars?: number) =>
   stellar.shortenAddress(address, chars);
 export const signTransaction = (xdr: string) => stellar.signTransaction(xdr);
+export const restoreConnection = (publicKey: string) => stellar.restoreConnection(publicKey);

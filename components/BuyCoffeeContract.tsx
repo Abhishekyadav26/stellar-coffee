@@ -131,7 +131,7 @@ function BuyCoffeeForm({
     <div className="space-y-5">
       {/* Preset Amounts */}
       <div>
-        <label className="block text-xs font-semibold text-amber-700 uppercase tracking-widest mb-2">
+        <label className="block text-xs font-bold text-white uppercase tracking-widest mb-2">
           Choose your coffee
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -139,14 +139,14 @@ function BuyCoffeeForm({
             <button
               key={p.xlm}
               onClick={() => setAmount(p.xlm)}
-              className={`rounded-xl px-3 py-2.5 text-sm font-medium border-2 transition-all duration-150 ${
+              className={`rounded-xl px-3 py-2.5 text-sm font-bold border-2 transition-all duration-150 ${
                 amount === p.xlm
-                  ? "border-amber-500 bg-amber-50 text-amber-800 shadow-sm"
-                  : "border-amber-100 bg-white text-amber-700 hover:border-amber-300"
+                  ? "border-white bg-gray-700 text-white shadow-sm"
+                  : "border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-400"
               }`}
             >
               <span className="block">{p.label}</span>
-              <span className="block text-xs text-amber-500">{p.desc}</span>
+              <span className="block text-xs text-gray-400">{p.desc}</span>
             </button>
           ))}
         </div>
@@ -154,7 +154,7 @@ function BuyCoffeeForm({
 
       {/* Custom Amount */}
       <div>
-        <label className="block text-xs font-semibold text-amber-700 uppercase tracking-widest mb-1">
+        <label className="block text-xs font-bold text-white uppercase tracking-widest mb-1">
           Custom Amount (XLM)
         </label>
         <input
@@ -163,14 +163,14 @@ function BuyCoffeeForm({
           onChange={(e) => setAmount(e.target.value)}
           min="0.1"
           step="0.1"
-          className="w-full rounded-xl border-2 border-amber-100 bg-amber-50/50 px-4 py-2.5 text-amber-900 text-sm font-mono focus:outline-none focus:border-amber-400 transition"
+          className="w-full rounded-xl border-2 border-gray-600 bg-gray-800 px-4 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-white transition"
           placeholder="Enter XLM amount"
         />
       </div>
 
       {/* Message */}
       <div>
-        <label className="block text-xs font-semibold text-amber-700 uppercase tracking-widest mb-1">
+        <label className="block text-xs font-bold text-white uppercase tracking-widest mb-1">
           Leave a message
         </label>
         <textarea
@@ -178,10 +178,10 @@ function BuyCoffeeForm({
           onChange={(e) => setMessage(e.target.value)}
           maxLength={100}
           rows={2}
-          className="w-full rounded-xl border-2 border-amber-100 bg-amber-50/50 px-4 py-2.5 text-amber-900 text-sm focus:outline-none focus:border-amber-400 transition resize-none"
+          className="w-full rounded-xl border-2 border-gray-600 bg-gray-800 px-4 py-2.5 text-white text-sm focus:outline-none focus:border-white transition resize-none"
           placeholder="Thanks for the great work! ☕"
         />
-        <p className="text-right text-xs text-amber-400 mt-0.5">
+        <p className="text-right text-xs text-gray-400 mt-0.5">
           {message.length}/100
         </p>
       </div>
@@ -415,54 +415,58 @@ export default function BuyCoffeeContract({ address }: Props) {
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
 
   const tabs: { id: Tab; label: string }[] = [
-    { id: "buy", label: "☕ Buy Coffee" },
+    { id: "buy", label: "☕ Buy Me a Coffee" },
     { id: "history", label: "📜 History" },
     { id: "leaderboard", label: "🏆 Board" },
     { id: "stats", label: "📊 My Stats" },
   ];
 
   return (
-    <div className="rounded-3xl overflow-hidden shadow-xl border border-amber-100">
+    <div className="rounded-3xl overflow-hidden shadow-xl border border-gray-700">
       {/* Header */}
       <div
         className="relative px-6 pt-8 pb-6"
         style={{
           background:
-            "linear-gradient(135deg, #7c4a1b 0%, #b5651d 50%, #d4843a 100%)",
+            "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #404040 100%)",
         }}
       >
         {/* Decorative steam */}
         <div className="absolute top-4 right-6 opacity-20 select-none pointer-events-none">
           <CoffeeRing size={80} />
         </div>
-        <p className="text-amber-200 text-xs font-semibold uppercase tracking-widest mb-1">
+        <p className="text-white text-xs font-bold uppercase tracking-widest mb-1">
           Soroban Smart Contract
         </p>
-        <h2 className="text-white text-2xl font-bold">By Me a Coffee ☕</h2>
-        <p className="text-amber-200 text-sm mt-1">
+        <h2 className="text-2xl font-bold text-white">By Me a Coffee ☕</h2>
+        <p className="text-gray-300 text-sm mt-1">
           Support creators on-chain · Stellar Testnet
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex bg-amber-50 border-b border-amber-100">
+      <div className="flex bg-gray-800 border-b border-gray-600">
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex-1 text-xs font-semibold py-3 px-1 transition-all ${
+            className={`flex-1 text-xs font-bold py-3 px-1 transition-all ${
               tab === t.id
-                ? "text-amber-800 border-b-2 border-amber-500 bg-white"
-                : "text-amber-500 hover:text-amber-700"
+                ? "text-white border-b-2 border-white bg-gray-900"
+                : "text-gray-400 hover:text-gray-200"
             }`}
           >
-            {t.label}
+            {t.id === "buy" && tab === "buy" ? (
+              <span className="font-bold text-white">{t.label}</span>
+            ) : (
+              t.label
+            )}
           </button>
         ))}
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white px-6 py-5">
+      <div className="bg-gray-900 px-6 py-5 border-x border-gray-600">
         {tab === "buy" && (
           <BuyCoffeeForm address={address} onSuccess={refresh} />
         )}
@@ -476,13 +480,13 @@ export default function BuyCoffeeContract({ address }: Props) {
       </div>
 
       {/* Footer */}
-      <div className="bg-amber-50 px-6 py-3 flex items-center justify-between border-t border-amber-100">
-        <p className="text-xs text-amber-400 font-mono">CAYRJAB…CCIKF</p>
+      <div className="bg-gray-800 px-6 py-3 flex items-center justify-between border-t border-gray-600">
+        <p className="text-xs text-gray-400 font-mono">CAYRJAB…CCIKF</p>
         <a
           href="https://lab.stellar.org/r/testnet/contract/CAYRJABAYNE4Q5PYYILXIUZOWKCHJGMURXXWAD7MXGFHGRRSUG5CCIKF"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-amber-500 hover:text-amber-700 underline"
+          className="text-xs text-gray-400 hover:text-gray-200 underline"
         >
           View on Stellar Lab →
         </a>

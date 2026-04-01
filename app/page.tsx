@@ -38,13 +38,13 @@ export default function Home() {
         backgroundColor="oklch(0.04 0 0)"
         className="opacity-20"
       />
-      <div className="relative z-10 max-w-2xl mx-auto px-4 py-10 space-y-6">
+      <div className="relative z-10 max-w-2xl mx-auto px-4 py-12 space-y-8">
         {/* Header */}
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-6">
           <div className="inline-flex items-center justify-center p-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
             <span className="text-4xl">☕</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-linear-to-r from-blue-400 via-purple-400 to-pink-400">
+          <h1 className="text-5xl md:text-6xl font-extrabold text-white">
             Buy me a coffee
           </h1>
           <p className="text-xl font-bold text-white">
@@ -71,17 +71,19 @@ export default function Home() {
             <div className="flex rounded-xl overflow-hidden border border-white/10 bg-black/30 backdrop-blur-md shadow-xl">
               <button
                 onClick={() => setActiveSection("coffee")}
-                className={`flex-1 py-2.5 text-sm font-semibold transition-all ${
+                className={`flex-1 py-3 text-sm font-bold transition-all ${
                   activeSection === "coffee"
                     ? "bg-amber-500 text-white shadow-lg"
                     : "text-amber-400 hover:bg-black/40"
                 }`}
               >
-                ☕ By Me a Coffee Contract
+                <span className="bg-clip-text  bg-linear-to-r text-white">
+                  ☕ Buy Me a Coffee Contract
+                </span>
               </button>
               <button
                 onClick={() => setActiveSection("payments")}
-                className={`flex-1 py-2.5 text-sm font-semibold transition-all ${
+                className={`flex-1 py-3 text-sm font-bold transition-all ${
                   activeSection === "payments"
                     ? "bg-indigo-500 text-white shadow-lg"
                     : "text-indigo-400 hover:bg-black/40"
@@ -113,11 +115,11 @@ export default function Home() {
         )}
 
         {!address && (
-          <div className="text-center py-20 space-y-6">
+          <div className="text-center py-24 space-y-8">
             <div className="inline-flex items-center justify-center p-6 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
               <span className="text-6xl">☕</span>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-4">
               <p className="text-2xl font-extrabold text-white">
                 Connect Your Wallet
               </p>
