@@ -8,6 +8,7 @@ import BalanceDisplay from "@/components/BalanceDisplay";
 import PaymentForm from "@/components/PaymentForm";
 import TransactionHistory from "@/components/TransactionHistory";
 import BuyCoffeeContract from "@/components/BuyCoffeeContract";
+import { GradientDots } from "@/components/ui/gradient-dots";
 
 export default function Home() {
   const [address, setAddress] = useState<string | null>(null);
@@ -29,19 +30,31 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-linear-to-br from-gray-900 via-blue-900 to-purple-900">
-      <div className="max-w-2xl mx-auto px-4 py-10 space-y-6">
+    <main className="relative min-h-screen">
+      <GradientDots
+        duration={25}
+        dotSize={2}
+        spacing={24}
+        backgroundColor="oklch(0.04 0 0)"
+        className="opacity-20"
+      />
+      <div className="relative z-10 max-w-2xl mx-auto px-4 py-10 space-y-6">
         {/* Header */}
-        <div className="text-center space-y-1.5">
-          <h1 className="text-3xl font-bold text-white">
-            Stellar Testnet dApp
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center p-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+            <span className="text-4xl">☕</span>
+          </div>
+          <h1 className="text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-linear-to-r from-blue-400 via-purple-400 to-pink-400">
+            Buy me a coffee
           </h1>
-          <p className="text-gray-300 text-sm">
-            Freighter Wallet · Stellar Testnet · Soroban Contracts
+          <p className="text-xl font-bold text-white">
+            Multi-Wallet Support · Stellar Testnet · Soroban Contracts
           </p>
-          <span className="inline-block text-xs bg-blue-600/20 text-blue-300 px-3 py-1 rounded-full font-medium border border-blue-500/30">
-            🧪 Testnet Only
-          </span>
+          <div className="flex justify-center">
+            <span className="inline-block text-base font-bold bg-linear-to-r from-blue-600/20 to-purple-600/20 text-white px-4 py-2 rounded-full border border-blue-500/30 backdrop-blur-sm">
+              🧪 Testnet Only
+            </span>
+          </div>
         </div>
 
         {/* Wallet */}
@@ -55,13 +68,13 @@ export default function Home() {
             <BalanceDisplay address={address} refreshTrigger={refreshCount} />
 
             {/* Section Switcher */}
-            <div className="flex rounded-xl overflow-hidden border border-amber-200 bg-amber-50">
+            <div className="flex rounded-xl overflow-hidden border border-white/10 bg-black/30 backdrop-blur-md shadow-xl">
               <button
                 onClick={() => setActiveSection("coffee")}
                 className={`flex-1 py-2.5 text-sm font-semibold transition-all ${
                   activeSection === "coffee"
-                    ? "bg-amber-500 text-white"
-                    : "text-amber-600 hover:bg-amber-100"
+                    ? "bg-amber-500 text-white shadow-lg"
+                    : "text-amber-400 hover:bg-black/40"
                 }`}
               >
                 ☕ By Me a Coffee Contract
@@ -70,8 +83,8 @@ export default function Home() {
                 onClick={() => setActiveSection("payments")}
                 className={`flex-1 py-2.5 text-sm font-semibold transition-all ${
                   activeSection === "payments"
-                    ? "bg-indigo-500 text-white"
-                    : "text-indigo-600 hover:bg-indigo-50"
+                    ? "bg-indigo-500 text-white shadow-lg"
+                    : "text-indigo-400 hover:bg-black/40"
                 }`}
               >
                 💸 XLM Payments
@@ -100,9 +113,18 @@ export default function Home() {
         )}
 
         {!address && (
-          <div className="text-center text-gray-400 py-16 space-y-3">
-            <p className="text-5xl">☕</p>
-            <p className="text-sm">Connect your wallet to get started</p>
+          <div className="text-center py-20 space-y-6">
+            <div className="inline-flex items-center justify-center p-6 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+              <span className="text-6xl">☕</span>
+            </div>
+            <div className="space-y-2">
+              <p className="text-2xl font-extrabold text-white">
+                Connect Your Wallet
+              </p>
+              <p className="text-base font-bold text-white">
+                Start your Stellar journey by connecting your wallet
+              </p>
+            </div>
           </div>
         )}
       </div>

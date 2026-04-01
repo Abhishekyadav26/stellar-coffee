@@ -11,6 +11,9 @@ importers:
       '@creit.tech/stellar-wallets-kit':
         specifier: ^1.9.5
         version: 1.9.5(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(@stellar/stellar-base@14.0.4)(@stellar/stellar-sdk@14.5.0)(@trezor/connect@9.6.2(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(tslib@2.8.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(ws@7.5.10(bufferutil@4.1.0)(utf-8-validate@5.0.10)))(@types/react@19.2.14)(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(near-api-js@5.1.1)(react@19.2.3)(tslib@2.8.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(ws@7.5.10(bufferutil@4.1.0)(utf-8-validate@5.0.10))
+      '@react-three/fiber':
+        specifier: ^9.5.0
+        version: 9.5.0(@types/react@19.2.14)(immer@11.1.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(three@0.183.2)
       '@stellar/stellar-sdk':
         specifier: ^14.5.0
         version: 14.5.0
@@ -20,6 +23,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      framer-motion:
+        specifier: ^12.38.0
+        version: 12.38.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       lucide-react:
         specifier: ^0.575.0
         version: 0.575.0(react@19.2.3)
@@ -47,6 +53,9 @@ importers:
       tailwind-merge:
         specifier: ^3.5.0
         version: 3.5.0
+      three:
+        specifier: ^0.183.2
+        version: 0.183.2
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4
@@ -1517,6 +1526,31 @@ packages:
   '@radix-ui/rect@1.1.1':
     resolution: {integrity: sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==}
 
+  '@react-three/fiber@9.5.0':
+    resolution: {integrity: sha512-FiUzfYW4wB1+PpmsE47UM+mCads7j2+giRBltfwH7SNhah95rqJs3ltEs9V3pP8rYdS0QlNne+9Aj8dS/SiaIA==}
+    peerDependencies:
+      expo: '>=43.0'
+      expo-asset: '>=8.4'
+      expo-file-system: '>=11.0'
+      expo-gl: '>=11.0'
+      react: '>=19 <19.3'
+      react-dom: '>=19 <19.3'
+      react-native: '>=0.78'
+      three: '>=0.156'
+    peerDependenciesMeta:
+      expo:
+        optional: true
+      expo-asset:
+        optional: true
+      expo-file-system:
+        optional: true
+      expo-gl:
+        optional: true
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+
   '@reduxjs/toolkit@2.11.2':
     resolution: {integrity: sha512-Kd6kAHTA6/nUpp8mySPqj3en3dm0tdMIgbttnQ1xFMVpufoj+ADi8pXLBsd4xzTRHQa7t/Jv8W5UnCuW4kuWMQ==}
     peerDependencies:
@@ -2164,6 +2198,11 @@ packages:
     peerDependencies:
       '@types/react': ^19.2.0
 
+  '@types/react-reconciler@0.28.9':
+    resolution: {integrity: sha512-HHM3nxyUZ3zAylX8ZEyrDNd2XZOnQ0D5XfunJF5FLQnZbHHYq4UWvW1QfelQNXv1ICNkwYhfxjwfnqivYB6bFg==}
+    peerDependencies:
+      '@types/react': '*'
+
   '@types/react@19.2.14':
     resolution: {integrity: sha512-ilcTH/UniCkMdtexkoCN0bI7pMcJDvmQFPvuPvmEaYA/NSfFTAgdUSLAoVjaRJm7+6PvcM+q1zYOwS4wTYMF9w==}
 
@@ -2187,6 +2226,9 @@ packages:
 
   '@types/web@0.0.197':
     resolution: {integrity: sha512-V4sOroWDADFx9dLodWpKm298NOJ1VJ6zoDVgaP+WBb/utWxqQ6gnMzd9lvVDAr/F3ibiKaxH9i45eS0gQPSTaQ==}
+
+  '@types/webxr@0.5.24':
+    resolution: {integrity: sha512-h8fgEd/DpoS9CBrjEQXR+dIDraopAEfu4wYVNY2tEPwk60stPWhvZMf4Foo5FakuQ7HFZoa8WceaWFervK2Ovg==}
 
   '@types/ws@7.4.7':
     resolution: {integrity: sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==}
@@ -3459,8 +3501,8 @@ packages:
     resolution: {integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==}
     engines: {node: '>= 0.6'}
 
-  framer-motion@12.34.3:
-    resolution: {integrity: sha512-v81ecyZKYO/DfpTwHivqkxSUBzvceOpoI+wLfgCgoUIKxlFKEXdg0oR9imxwXumT4SFy8vRk9xzJ5l3/Du/55Q==}
+  framer-motion@12.38.0:
+    resolution: {integrity: sha512-rFYkY/pigbcswl1XQSb7q424kSTQ8q6eAC+YUsSKooHQYuLdzdHjrt6uxUC+PRAO++q5IS7+TamgIw1AphxR+g==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0 || ^19.0.0
@@ -3931,6 +3973,11 @@ packages:
     resolution: {integrity: sha512-H0dkQoCa3b2VEeKQBOxFph+JAbcrQdE7KC0UkqwpLmv2EC4P41QXP+rqo9wYodACiG5/WM5s9oDApTU8utwj9g==}
     engines: {node: '>= 0.4'}
 
+  its-fine@2.0.0:
+    resolution: {integrity: sha512-KLViCmWx94zOvpLwSlsx6yOCeMhZYaxrJV87Po5k/FoZzcPSahvK5qJ7fYhS61sZi5ikmh2S3Hz55A2l3U69ng==}
+    peerDependencies:
+      react: ^19.0.0
+
   jayson@4.3.0:
     resolution: {integrity: sha512-AauzHcUcqs8OBnCHOkJY280VaTiCm57AbuO7lqzcw7JapGj50BisE3xhksye4zlTSR1+1tAz67wLTl8tEH1obQ==}
     engines: {node: '>=8'}
@@ -4238,11 +4285,11 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
-  motion-dom@12.34.3:
-    resolution: {integrity: sha512-sYgFe+pR9aIM7o4fhs2aXtOI+oqlUd33N9Yoxcgo1Fv7M20sRkHtCmzE/VRNIcq7uNJ+qio+Xubt1FXH3pQ+eQ==}
+  motion-dom@12.38.0:
+    resolution: {integrity: sha512-pdkHLD8QYRp8VfiNLb8xIBJis1byQ9gPT3Jnh2jqfFtAsWUA3dEepDlsWe/xMpO8McV+VdpKVcp+E+TGJEtOoA==}
 
-  motion-utils@12.29.2:
-    resolution: {integrity: sha512-G3kc34H2cX2gI63RqU+cZq+zWRRPSsNIOjpdl9TN4AQwC4sgwYPl/Q/Obf/d53nOm569T0fYK+tcoSV50BWx8A==}
+  motion-utils@12.36.0:
+    resolution: {integrity: sha512-eHWisygbiwVvf6PZ1vhaHCLamvkSbPIeAYxWUuL3a2PD/TROgE7FvfHWTIH4vMl798QLfMw15nRqIaRDXTlYRg==}
 
   motion@10.16.2:
     resolution: {integrity: sha512-p+PurYqfUdcJZvtnmAqu5fJgV2kR0uLFQuBKtLeFVTrYEVllI99tiOTSefVNYuip9ELTEkepIIDftNdze76NAQ==}
@@ -4730,6 +4777,15 @@ packages:
       '@types/react':
         optional: true
 
+  react-use-measure@2.1.7:
+    resolution: {integrity: sha512-KrvcAo13I/60HpwGO5jpW7E9DfusKyLPLvuHlUyP5zqnmAPhNc6qTRjUQrdTADl0lpPpDVU2/Gg51UlOGHXbdg==}
+    peerDependencies:
+      react: '>=16.13'
+      react-dom: '>=16.13'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+
   react@19.2.3:
     resolution: {integrity: sha512-Ku/hhYbVjOQnXDZFv2+RibmLFGwFdeeKHFcOTlrt7xplBnya5OGn/hIRDsqDiSUcfORsDC7MPxwork8jBwsIWA==}
     engines: {node: '>=0.10.0'}
@@ -5151,6 +5207,11 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  suspend-react@0.1.3:
+    resolution: {integrity: sha512-aqldKgX9aZqpoDp3e8/BZ8Dm7x1pJl+qI3ZKxDN0i/IQTWUwBx/ManmlVJ3wowqbno6c2bmiIfs+Um6LbsjJyQ==}
+    peerDependencies:
+      react: '>=17.0'
+
   tagged-tag@1.0.0:
     resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
     engines: {node: '>=20'}
@@ -5170,6 +5231,9 @@ packages:
 
   thread-stream@0.15.2:
     resolution: {integrity: sha512-UkEhKIg2pD+fjkHQKyJO3yoIvAP3N6RlNFt2dUhcS1FGvCD1cQa1M/PGknCLFIyZdtJOWQjejp7bdNqmN7zwdA==}
+
+  three@0.183.2:
+    resolution: {integrity: sha512-di3BsL2FEQ1PA7Hcvn4fyJOlxRRgFYBpMTcyOgkwJIaDOdJMebEFPA+t98EvjuljDx4hNulAGwF6KIjtwI5jgQ==}
 
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
@@ -5642,6 +5706,24 @@ packages:
 
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
+
+  zustand@5.0.12:
+    resolution: {integrity: sha512-i77ae3aZq4dhMlRhJVCYgMLKuSiZAaUPAct2AksxQ+gOtimhGMdXljRT21P5BNpeT4kXlLIckvkPM029OljD7g==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
 
 snapshots:
 
@@ -7308,6 +7390,26 @@ snapshots:
 
   '@radix-ui/rect@1.1.1': {}
 
+  '@react-three/fiber@9.5.0(@types/react@19.2.14)(immer@11.1.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(three@0.183.2)':
+    dependencies:
+      '@babel/runtime': 7.28.6
+      '@types/webxr': 0.5.24
+      base64-js: 1.5.1
+      buffer: 6.0.3
+      its-fine: 2.0.0(@types/react@19.2.14)(react@19.2.3)
+      react: 19.2.3
+      react-use-measure: 2.1.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      scheduler: 0.27.0
+      suspend-react: 0.1.3(react@19.2.3)
+      three: 0.183.2
+      use-sync-external-store: 1.6.0(react@19.2.3)
+      zustand: 5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
+    optionalDependencies:
+      react-dom: 19.2.3(react@19.2.3)
+    transitivePeerDependencies:
+      - '@types/react'
+      - immer
+
   '@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.3)(redux@5.0.1))(react@19.2.3)':
     dependencies:
       '@standard-schema/spec': 1.1.0
@@ -8260,6 +8362,10 @@ snapshots:
     dependencies:
       '@types/react': 19.2.14
 
+  '@types/react-reconciler@0.28.9(@types/react@19.2.14)':
+    dependencies:
+      '@types/react': 19.2.14
+
   '@types/react@19.2.14':
     dependencies:
       csstype: 3.2.3
@@ -8277,6 +8383,8 @@ snapshots:
   '@types/w3c-web-usb@1.0.13': {}
 
   '@types/web@0.0.197': {}
+
+  '@types/webxr@0.5.24': {}
 
   '@types/ws@7.4.7':
     dependencies:
@@ -9915,10 +10023,10 @@ snapshots:
 
   forwarded@0.2.0: {}
 
-  framer-motion@12.34.3(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+  framer-motion@12.38.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
-      motion-dom: 12.34.3
-      motion-utils: 12.29.2
+      motion-dom: 12.38.0
+      motion-utils: 12.36.0
       tslib: 2.8.1
     optionalDependencies:
       react: 19.2.3
@@ -10359,6 +10467,13 @@ snapshots:
       has-symbols: 1.1.0
       set-function-name: 2.0.2
 
+  its-fine@2.0.0(@types/react@19.2.14)(react@19.2.3):
+    dependencies:
+      '@types/react-reconciler': 0.28.9(@types/react@19.2.14)
+      react: 19.2.3
+    transitivePeerDependencies:
+      - '@types/react'
+
   jayson@4.3.0(bufferutil@4.1.0)(utf-8-validate@5.0.10):
     dependencies:
       '@types/connect': 3.4.38
@@ -10637,11 +10752,11 @@ snapshots:
 
   minimist@1.2.8: {}
 
-  motion-dom@12.34.3:
+  motion-dom@12.38.0:
     dependencies:
-      motion-utils: 12.29.2
+      motion-utils: 12.36.0
 
-  motion-utils@12.29.2: {}
+  motion-utils@12.36.0: {}
 
   motion@10.16.2:
     dependencies:
@@ -10654,7 +10769,7 @@ snapshots:
 
   motion@12.34.3(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
-      framer-motion: 12.34.3(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      framer-motion: 12.38.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       tslib: 2.8.1
     optionalDependencies:
       react: 19.2.3
@@ -11205,6 +11320,12 @@ snapshots:
       tslib: 2.8.1
     optionalDependencies:
       '@types/react': 19.2.14
+
+  react-use-measure@2.1.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+    dependencies:
+      react: 19.2.3
+    optionalDependencies:
+      react-dom: 19.2.3(react@19.2.3)
 
   react@19.2.3: {}
 
@@ -11787,6 +11908,10 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
+  suspend-react@0.1.3(react@19.2.3):
+    dependencies:
+      react: 19.2.3
+
   tagged-tag@1.0.0: {}
 
   tailwind-merge@3.5.0: {}
@@ -11800,6 +11925,8 @@ snapshots:
   thread-stream@0.15.2:
     dependencies:
       real-require: 0.1.0
+
+  three@0.183.2: {}
 
   tiny-invariant@1.3.3: {}
 
@@ -12270,3 +12397,10 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.3.6: {}
+
+  zustand@5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3)):
+    optionalDependencies:
+      '@types/react': 19.2.14
+      immer: 11.1.4
+      react: 19.2.3
+      use-sync-external-store: 1.6.0(react@19.2.3)

@@ -53,11 +53,11 @@ export default function WalletConnection({
 
   if (!isConnected) {
     return (
-      <div className="border border-white/10 rounded-lg p-6 bg-white/5 space-y-4">
+      <div className="border border-white/10 rounded-xl p-6 bg-black/40 backdrop-blur-md space-y-4 shadow-2xl">
         <button
           onClick={handleConnect}
           disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg"
         >
           {loading ? (
             <>
@@ -73,25 +73,29 @@ export default function WalletConnection({
         </button>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
+          <div className="bg-red-500/20 backdrop-blur-sm border border-red-500/40 rounded-lg p-3">
             <p className="text-red-300 text-xs whitespace-pre-line">{error}</p>
           </div>
         )}
 
-        <div className="text-xs text-gray-400 space-y-1">
-          <p>💡 Make sure Freighter is installed and enabled</p>
-          <p>🔄 Try refreshing the page if connection fails</p>
+        <div className="text-xs space-y-1">
+          <p className="font-bold text-white">
+            💡 Make sure your wallet is installed and enabled
+          </p>
+          <p className="font-bold text-white">
+            🔄 Try refreshing if connection fails
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="border border-white/10 rounded-lg p-6 bg-white/5 space-y-4">
+    <div className="border border-white/10 rounded-xl p-6 bg-black/40 backdrop-blur-md space-y-4 shadow-2xl">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-white text-sm font-medium">Connected</span>
+          <span className="text-sm font-bold text-white">Connected</span>
         </div>
         <button
           onClick={handleDisconnect}
@@ -101,10 +105,12 @@ export default function WalletConnection({
         </button>
       </div>
 
-      <div className="bg-white/10 rounded-lg p-4 border border-white/20">
-        <p className="text-white/60 text-xs mb-2">Your Address</p>
+      <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+        <p className="text-xs font-bold mb-2 text-white">Your Address</p>
         <div className="flex items-center justify-between gap-2">
-          <p className="text-white font-mono text-sm break-all">{publicKey}</p>
+          <p className="font-mono font-bold text-sm break-all text-white">
+            {publicKey}
+          </p>
           <button
             onClick={handleCopyAddress}
             className="text-blue-400 hover:text-blue-300 shrink-0 transition-colors"
